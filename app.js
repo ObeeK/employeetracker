@@ -54,7 +54,7 @@ function viewAllEmployees() {
 // employee prompt
 
 // add employee
-function addEmployees() {
+function addEmployee() {
     console.log("add");
     db.query(`SELECT * FROM roles`, (err, rows) => {
         if (err) {
@@ -68,47 +68,67 @@ function addEmployees() {
                 value: row.id
             }
         })
-        console.log(roleMap)
+        console.log(roleMap);
+        db.query(`SELECT * FROM employee`, (err, rows) => {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+            const managers = rows.filter(employee => {
+                if(employee.manager_id === null) {
+                    return employee
+                }
+                
+            });
+            console.log(managers)
+            const managerMap = managers.map(row => {
+                return {
+                    name: row.first_name + " " + row.last_name,
+                    value: row.id
+                }
+            })
         inquirer
             .prompt([
                 {
                     type: 'input',
-                    name: 'firstName',
+                    name: 'first_name',
                     message: 'What is their first name?'
                 },
                 {
                     type: 'input',
-                    name: 'lastName',
+                    name: 'last_name',
                     message: 'What is their last name?'
                 },
                 {
                     type: 'list',
-                    name: 'role',
+                    name: 'role_id',
                     message: 'What is their role?',
                     choices: roleMap
                 },
                 {
                     type: 'list',
-                    name: 'manager',
-                    message: 'Who is their manager?'
-                    // choices: managers
+                    name: 'manager_id',
+                    message: 'Who is their manager?',
+                    choices: managerMap
                 }
 
 
             ])
             .then(employeeInfo => {
-            //     const sql = `INSERT INTO employee (firstName, lastName, role, manager )
-            // VALUES (?, ?, ?, ?)
-            // `
+                const sql = `INSERT INTO employee SET ?`
+                db.query(sql, employeeInfo, (err, res) => {
+                    if(err){
+                    console.log(err)
+                }
+            console.log('Successfully added employee!')
+            });
                 console.log(employeeInfo)
+                menuPrompt()
+
             })
-    
+        });
     })
-    menuPrompt()
 }
-
-
-// addEmployees()
 
 
 // view departments
