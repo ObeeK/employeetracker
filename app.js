@@ -164,6 +164,64 @@ function viewAllRoles() {
 };
 
 // update employee role
+function updateEmployee() {
+
+
+    db.query(`SELECT * FROM roles`, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+            return;
+        }
+        console.log(rows);
+        const roleMap = rows.map(row => {
+            return {
+                name: row.title,
+                value: row.id
+            }
+        })
+    db.query(`SELECT * FROM employee`, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+            return;
+        }
+        const employeeMap = rows.map(row => {
+            return {
+                name: row.first_name + " " + row.last_name,
+                value: row.id
+            }
+        })
+    
+    
+    inquirer
+    .prompt([
+        {
+            type: 'list',
+            name: 'employees',
+            choices: employeeMap
+        },
+        {
+            type: 'list',
+            name: 'role_id',
+            choices: roleMap
+        }
+    ])
+    .then(employeeRoleInfo => {
+        const sql = `UPDATE employee SET role_id = ? WHERE id = ?`
+        db.query(sql, [employeeRoleInfo.role_id, employeeRoleInfo.employees], (err, res) => {
+            if(err){
+            console.log(err)
+            
+        }
+        menuPrompt()
+
+    console.log('Successfully added department!')
+    });
+        console.log(departmentInfo)
+});
+    });
+    });
+}
+
 // add dept
 function addDepartment() {
     
@@ -171,36 +229,22 @@ function addDepartment() {
             .prompt([
                 {
                     type: 'input',
-                    name: 'title',
-                    message: 'What is the title?'
-                },
-                {
-                    type: 'input',
-                    name: 'salary',
-                    message: 'What is the salary?'
-                },
-                {
-                    type: 'list',
-                    name: 'department_id',
-                    message: 'What is the department?',
-                    choices: departmentMap
+                    name: 'department_name',
+                    message: 'What is the name?'
                 }
-
-
             ])
-            .then(roleInfo => {
-                const sql = `INSERT INTO roles SET ?`
-                db.query(sql, roleInfo, (err, res) => {
+            .then(departmentInfo => {
+                const sql = `INSERT INTO department SET ?`
+                db.query(sql, departmentInfo, (err, res) => {
                     if(err){
                     console.log(err)
                 }
-            console.log('Successfully added role!')
+            console.log('Successfully added department!')
             });
-                console.log(roleInfo)
+                console.log(departmentInfo)
                 menuPrompt()
 
             })
-        });
 };
 
 // add role
