@@ -161,15 +161,96 @@ function viewAllRoles() {
         console.log(rows);
         menuPrompt()
     });
-    // menuPrompt()
 };
+
 // update employee role
 // add dept
+function addDepartment() {
+    
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'title',
+                    message: 'What is the title?'
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'What is the salary?'
+                },
+                {
+                    type: 'list',
+                    name: 'department_id',
+                    message: 'What is the department?',
+                    choices: departmentMap
+                }
+
+
+            ])
+            .then(roleInfo => {
+                const sql = `INSERT INTO roles SET ?`
+                db.query(sql, roleInfo, (err, res) => {
+                    if(err){
+                    console.log(err)
+                }
+            console.log('Successfully added role!')
+            });
+                console.log(roleInfo)
+                menuPrompt()
+
+            })
+        });
+};
+
 // add role
+function addRole() {
+    db.query(`SELECT * FROM department`, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+            return;
+        }
+        console.log(rows);
+        const departmentMap = rows.map(row => {
+            return {
+                name: row.department_name,
+                value: row.id
+            }
+        })
+        console.log(departmentMap);
+        inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'title',
+                    message: 'What is the title?'
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'What is the salary?'
+                },
+                {
+                    type: 'list',
+                    name: 'department_id',
+                    message: 'What is the department?',
+                    choices: departmentMap
+                }
 
 
-// do something with choices (.then)
+            ])
+            .then(roleInfo => {
+                const sql = `INSERT INTO roles SET ?`
+                db.query(sql, roleInfo, (err, res) => {
+                    if(err){
+                    console.log(err)
+                }
+            console.log('Successfully added role!')
+            });
+                console.log(roleInfo)
+                menuPrompt()
 
-    // switch cases
-    // function for each option
+            })
+        });
+};
 
