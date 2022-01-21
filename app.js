@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
-const db = require('./db/connection');
+const db = require('./db/connections');
 const mysql = require('mysql2')
-// const console = require('console.table')
+const cTable = require('console.table')
 
 // prompt to present with all possible options
 // menuPrompt()
@@ -26,13 +26,13 @@ function viewEmployees() {
 
 // add employee
 function addEmployees() {
-    console.log("add")
+    console.log("add");
     db.query(`SELECT * FROM roles`, (err, rows) => {
         if (err) {
             console.log(err.message);
             return;
         }
-        console.log(rows)
+        console.log(rows);
         const roleMap = rows.map(row => {
             return {
                 name: row.title,
@@ -62,7 +62,7 @@ function addEmployees() {
 
             ])
             .then(employeeInfo => {
-            //     const sql = `INSERT INTO employee (name, description)
+            //     const sql = `INSERT INTO employee (name, description, role )
             // VALUES (?, ?, ?, ?)
             // `
                 console.log(employeeInfo)
@@ -71,7 +71,7 @@ function addEmployees() {
     })
 }
 
-console.log("hit");
+
 addEmployees()
 
 
