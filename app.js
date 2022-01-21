@@ -18,7 +18,7 @@ function menuPrompt () {
       break;
       case 'View all roles': viewAllRoles();
       break;
-      case 'View all employees': viewEmployees();
+      case 'View all employees': viewAllEmployees();
       break;
       case 'Add a department': addDepartment();
       break;  
@@ -28,14 +28,14 @@ function menuPrompt () {
       break;
       case 'Update an employee role': updateEmployee();
       break;
-      default: console.log('Select a valid option !')
+      default: console.log('Select a valid option!')
       } 
     });
   }
-// menuPrompt()
+menuPrompt()
 
 // view employees
-function viewEmployees() {
+function viewAllEmployees() {
 
     const sql = `SELECT * FROM employee;`
 
@@ -46,14 +46,15 @@ function viewEmployees() {
         }
         // if no error
         console.log(rows);
+        menuPrompt()
     });
-    menuPrompt()
+    // menuPrompt()
 };
 
 // employee prompt
 
 // add employee
-function addEmployee() {
+function addEmployees() {
     console.log("add");
     db.query(`SELECT * FROM roles`, (err, rows) => {
         if (err) {
@@ -96,21 +97,52 @@ function addEmployee() {
 
             ])
             .then(employeeInfo => {
-            //     const sql = `INSERT INTO employee (name, description, role )
+            //     const sql = `INSERT INTO employee (firstName, lastName, role, manager )
             // VALUES (?, ?, ?, ?)
             // `
                 console.log(employeeInfo)
             })
     
     })
+    menuPrompt()
 }
 
 
-addEmployees()
+// addEmployees()
 
 
 // view departments
+function viewAllDepartments() {
+
+    const sql = `SELECT * FROM department;`
+
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+            return;
+        }
+        // if no error
+        console.log(rows);
+        menuPrompt()
+    });
+    // menuPrompt()
+};
 // view roles
+function viewAllRoles() {
+
+    const sql = `SELECT * FROM roles;`
+
+    db.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+            return;
+        }
+        // if no error
+        console.log(rows);
+        menuPrompt()
+    });
+    // menuPrompt()
+};
 // update employee role
 // add dept
 // add role
