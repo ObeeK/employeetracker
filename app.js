@@ -4,6 +4,34 @@ const mysql = require('mysql2')
 const cTable = require('console.table')
 
 // prompt to present with all possible options
+function menuPrompt () {
+    inquirer
+    .prompt({
+    type: 'list',
+    name: 'tables',
+    message: 'Select an option',
+    choices: [ 'View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role' ]
+    })
+    .then((res) => {
+    switch(res.tables) {
+      case 'View all departments': viewAllDepartments(); 
+      break;
+      case 'View all roles': viewAllRoles();
+      break;
+      case 'View all employees': viewEmployees();
+      break;
+      case 'Add a department': addDepartment();
+      break;  
+      case 'Add a role': addRole();
+      break;  
+      case 'Add an employee': addEmployee();
+      break;
+      case 'Update an employee role': updateEmployee();
+      break;
+      default: console.log('Select a valid option !')
+      } 
+    });
+  }
 // menuPrompt()
 
 // view employees
@@ -19,13 +47,13 @@ function viewEmployees() {
         // if no error
         console.log(rows);
     });
-    // menuPrompt()
+    menuPrompt()
 };
 
 // employee prompt
 
 // add employee
-function addEmployees() {
+function addEmployee() {
     console.log("add");
     db.query(`SELECT * FROM roles`, (err, rows) => {
         if (err) {
@@ -57,7 +85,13 @@ function addEmployees() {
                     name: 'role',
                     message: 'What is their role?',
                     choices: roleMap
-            }
+                },
+                {
+                    type: 'list',
+                    name: 'manager',
+                    message: 'Who is their manager?'
+                    // choices: managers
+                }
 
 
             ])
